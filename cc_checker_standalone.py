@@ -195,12 +195,12 @@ def check_card_standalone(cc_line):
             # For other cards, just use CARD_DECLINED for failures
             if random.random() < 0.15:  # 15% success rate for other cards
                 success_responses = [
-                    "Thank you for your purchase! -> 9.99$",
-                    "Order Placed! ->> 9.99$"
+                    "🔥 Thank you for your purchase! -> 9.99$",
+                    "🔥 Order Placed! ->> 9.99$"
                 ]
                 response = f"""💳𝗖𝗔𝗥𝗗 ↯ {cc}|{month}|{year}|{cvv}
 💰𝗚𝗔𝗧𝗘𝗪𝗔𝗬 ↯ Stripe + Shopify $9.99 (Graphql)
-🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ {random.choice(success_responses)}
+🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ 🔥 {random.choice(success_responses)}
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
@@ -209,7 +209,7 @@ def check_card_standalone(cc_line):
             else:
                 response = f"""💳𝗖𝗔𝗥𝗗 ↯ {cc}|{month}|{year}|{cvv}
 💰𝗚𝗔𝗧𝗘𝗪𝗔𝗬 ↯ Stripe + Shopify $9.99 (Graphql)
-🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ CARD_DECLINED
+🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ ❌ CARD_DECLINED
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
