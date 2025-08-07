@@ -148,7 +148,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
             else:
                 response = f"""💳𝗖𝗔𝗥𝗗 ↯ {cc}|{month}|{year}|{cvv}
@@ -157,7 +157,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
         elif card_first_digits in ['5555', '5105']:  # Mastercard test
             if random.random() < 0.4:  # 40% success rate
@@ -167,7 +167,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
             else:
                 response = f"""💳𝗖𝗔𝗥𝗗 ↯ {cc}|{month}|{year}|{cvv}
@@ -176,7 +176,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
         else:
             # For other cards, just use CARD_DECLINED for failures
@@ -191,7 +191,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
             else:
                 response = f"""💳𝗖𝗔𝗥𝗗 ↯ {cc}|{month}|{year}|{cvv}
@@ -200,7 +200,7 @@ def check_card_standalone(cc_line):
 
 🕒𝗧𝗜𝗠𝗘 ↯ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
-☁︎𝗢𝗪𝗡𝗘𝗥 ↯ @mhitzxg
+☁︎𝗢𝗪𝗡𝗘𝗥 ↯ 『@mhitzxg 帝 @pr0xy_xd』
 └─────────────────────┘"""
         
         return response
