@@ -547,10 +547,10 @@ def mchk_handler(msg):
 
     approved, declined, checked = 0, 0, 0
 
-    def process_all():
+ def process_all():
         nonlocal approved, declined, checked
         for cc in cc_lines:
-            try:
+ try:
                 checked += 1
                 result = check_card_standalone(cc.strip())
                 if "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ Thank you for your purchase!" in result or "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ Order Placed!" in result:
