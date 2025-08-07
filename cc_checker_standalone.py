@@ -1,5 +1,4 @@
 import telebot
-from flask import Flask
 import re
 import threading
 import time
@@ -50,31 +49,19 @@ def save_auth(data):
     with open("authorized.json", "w") as f:
         json.dump(data, f)
 
-def is_authorized(msg):
-    user_id = msg.from_user.id
-    chat = msg.chat
-
-    # ✅ Allow all admins anywhere
-    if is_admin(user_id):
+def is_authorized(chat_id):
+    if is_admin(chat_id):
         return True
-
-    # ✅ If message is from group and group is authorized
-    if chat.type in ["group", "supergroup"]:
-        return is_group_authorized(chat.id)
-
-    # ✅ If private chat, only allow authorized users
-    if chat.type == "private":
-        if str(user_id) in AUTHORIZED_USERS:
-            expiry = AUTHORIZED_USERS[str(user_id)]
-            if expiry == "forever":
-                return True
-            if time.time() < expiry:
-                return True
-            else:
-                del AUTHORIZED_USERS[str(user_id)]
-                save_auth(AUTHORIZED_USERS)
-        return False
-
+    if str(chat_id) in AUTHORIZED_USERS:
+        expiry = AUTHORIZED_USERS[str(chat_id)]
+        if expiry == "forever":
+            return True
+        if time.time() < expiry:
+            return True
+        else:
+            del AUTHORIZED_USERS[str(chat_id)]
+            save_auth(AUTHORIZED_USERS)
+    return False
 
 def normalize_card(text):
     """
@@ -148,7 +135,6 @@ def check_card_standalone(cc_line):
         # Validate CVV
         if not cvv.isdigit() or len(cvv) < 3 or len(cvv) > 4:
             return f"❌ Error: Invalid CVV\nCard: {cc_line}"
-        
         # Simulate card checking process based on actual PHP responses
         card_first_digits = cc[:4]
         
@@ -224,26 +210,12 @@ def check_card_standalone(cc_line):
 # Load initial data
 AUTHORIZED_USERS = load_auth()
 ADMIN_IDS = load_admins()
-#fr groups
-GROUPS_FILE = 'authorized_groups.json'
 
-def load_authorized_groups():
-    if not os.path.exists(GROUPS_FILE):
-        return []
-    with open(GROUPS_FILE, 'r') as f:
-        return json.load(f)
-
-def save_authorized_groups(groups):
-    with open(GROUPS_FILE, 'w') as f:
-        json.dump(groups, f)
-
-def is_group_authorized(group_id):
-    return group_id in load_authorized_groups()
 # ---------------- Admin Commands ---------------- #
 
 @bot.message_handler(commands=['addadmin'])
 def add_admin(msg):
-    if msg.from_user.id != MAIN_ADMIN_ID:  # Only main admin can add other admins
+    if msg.from_user.id != MAIN_ADMIN_ID:
         return bot.reply_to(msg, """✦━━━[ ᴀᴄᴄᴇꜱꜱ ᴅᴇɴɪᴇᴅ ]━━━✦
 
 ⟡ ᴏɴʟʏ ᴛʜᴇ ᴍᴀɪɴ ᴀᴅᴍɪɴ ᴄᴀɴ ᴀᴅᴅ ᴏᴛʜᴇʀ ᴀᴅᴍɪɴꜱ
@@ -353,44 +325,6 @@ def list_admins(msg):
 
 {admin_list}
 ⟡ ᴛᴏᴛᴀʟ ᴀᴅᴍɪɴꜱ: {len(admins)}""")
-@bot.message_handler(commands=['authgroup'])
-def authorize_group(msg):
-    if msg.from_user.id != MAIN_ADMIN_ID:
-        return bot.reply_to(msg, """✦━━━[ ᴀᴄᴄᴇꜱꜱ ᴅᴇɴɪᴇᴅ ]━━━✦
-
-⟡ ᴏɴʟʏ ᴍᴀɪɴ ᴀᴅᴍɪɴ ᴄᴀɴ ᴀᴜᴛʜᴏʀɪᴢᴇ ɢʀᴏᴜᴘꜱ""")
-
-    try:
-        parts = msg.text.split()
-        if len(parts) < 2:
-            return bot.reply_to(msg, """✦━━━[ ɪɴᴠᴀʟɪᴅ ꜰᴏʀᴍᴀᴛ ]━━━✦
-
-⟡ ᴜꜱᴀɢᴇ: `/authgroup <group_id>`
-⟡ ᴇxᴀᴍᴘʟᴇ: `/authgroup -1001234567890`""")
-
-        group_id = int(parts[1])
-        groups = load_authorized_groups()
-
-        if group_id in groups:
-            return bot.reply_to(msg, """✦━━━[ ᴀʟʀᴇᴀᴅʏ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ]━━━✦
-
-⟡ ᴛʜɪꜱ ɢʀᴏᴜᴘ ɪꜱ ᴀʟʀᴇᴀᴅʏ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ""")
-
-        groups.append(group_id)
-        save_authorized_groups(groups)
-        bot.reply_to(msg, f"""✦━━━[ ɢʀᴏᴜᴘ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ]━━━✦
-
-⟡ ꜱᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ɢʀᴏᴜᴘ: `{group_id}`
-⟡ ᴛᴏᴛᴀʟ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ɢʀᴏᴜᴘꜱ: {len(groups)}""")
-
-    except ValueError:
-        bot.reply_to(msg, """✦━━━[ ɪɴᴠᴀʟɪᴅ ɢʀᴏᴜᴘ ɪᴅ ]━━━✦
-
-⟡ ᴘʟᴇᴀꜱᴇ ᴇɴᴛᴇʀ ᴀ ᴠᴀʟɪᴅ ɴᴜᴍᴇʀɪᴄ ɢʀᴏᴜᴘ ɪᴅ""")
-    except Exception as e:
-        bot.reply_to(msg, f"""✦━━━[ ᴇʀʀᴏʀ ]━━━✦
-
-⟡ ᴇʀʀᴏʀ: {str(e)}""")
 
 # ---------------- Bot Commands ---------------- #
 
@@ -448,7 +382,7 @@ def remove_auth(msg):
 
 @bot.message_handler(commands=['chk'])
 def chk_handler(msg):
-    if not is_authorized(msg):
+    if not is_authorized(msg.from_user.id):
         return bot.reply_to(msg, """✦━━━[  ᴀᴄᴄᴇꜱꜱ ᴅᴇɴɪᴇᴅ ]━━━✦
 
 ⟡ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ
@@ -523,7 +457,7 @@ def chk_handler(msg):
 
 @bot.message_handler(commands=['mchk'])
 def mchk_handler(msg):
-    if not is_authorized(msg):
+    if not is_authorized(msg.from_user.id):
         return bot.reply_to(msg, """✦━━━[  ᴀᴄᴄᴇꜱꜱ ᴅᴇɴɪᴇᴅ ]━━━✦
 
 ⟡ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴜᴛʜᴏʀɪᴢᴇᴅ ᴛᴏ ᴜꜱᴇ ᴛʜɪꜱ ʙᴏᴛ
