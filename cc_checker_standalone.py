@@ -547,7 +547,7 @@ def mchk_handler(msg):
 
     approved, declined, checked = 0, 0, 0
 
- def process_all():
+    def process_all():
         nonlocal approved, declined, checked
         for cc in cc_lines:
             try:
