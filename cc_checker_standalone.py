@@ -553,7 +553,7 @@ def mchk_handler(msg):
             try:
                 checked += 1
                 result = check_card_standalone(cc.strip())
-                if "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ Thank you for your purchase!" in result or "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ Order Placed!" in result:
+                if "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ 🔥 Thank you for your purchase! -> 9.99$" in result or "🚀𝗥𝗘𝗦𝗣𝗢𝗡𝗦𝗘 ↯ 🔥 Order Placed! ->> 9.99$" in result:
                     approved += 1
                     bot.send_message(user_id, result, parse_mode='HTML')
                     if MAIN_ADMIN_ID != user_id:
